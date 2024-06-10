@@ -4,6 +4,8 @@ body {
   /* The <body> element has a default margin of 8px
      on all sides. This removes the default margins. */
   margin: 0;
+  background-color: rgb(19, 19, 19);
+  color: rgb(255, 255, 255);
 }
 
 /* <p> elements have a default margin on the top
