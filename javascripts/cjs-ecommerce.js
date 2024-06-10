@@ -69,13 +69,13 @@ const productsGrid = document.querySelector('.js-products-grid');
 productsGrid.innerHTML = productsHTML;
 
 const addToCartBtn = document.querySelectorAll('.js-add-to-cart');
-addToCartBtn.forEach((btn) => {
+addToCartBtn.forEach((btn) => {  
   btn.addEventListener('click', () => {
     const productId = btn.dataset.productId;
-    const productName = btn.dataset.productName;
+    const productName = btn.dataset.productName;   
 
-    let matchingItem;
-    
+    let matchingItem;    
+
     // cart.forEach(item => item.productId === productId && (matchingItem = item)); // shorthand
 
     cart.forEach(item => { // longhand (verbose)
@@ -93,7 +93,15 @@ addToCartBtn.forEach((btn) => {
         quantity: 1
       });
     }    
+
+    let totalQuantity = 0;
+    cart.forEach((item) => {
+      totalQuantity += item.quantity;
+    });
+    console.log(totalQuantity);
     console.log(cart);
+    const cartQuantity = document.querySelector('.js-cart-quantity');
+    cartQuantity.innerHTML = totalQuantity;
   }); 
 });
 
