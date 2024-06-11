@@ -74,6 +74,13 @@ products.forEach((product) => {
         </select>
       </div>
 
+      <div class="product-spacer"></div>
+
+      <div class="js-added-to-cart-message-${product.id} added-to-cart" data-testid="added-to-cart-message">
+        <img src="images/icons/checkmark.png">
+        Added
+      </div>
+
       <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}" data-product-name="${product.name}">
           Add to Cart
       </button>
@@ -93,7 +100,7 @@ addToCartBtns.forEach((btn) => {
       const productName = btn.dataset.productName; // no destructuring
     */
     const { productId, productName } = btn.dataset; // destructuring
-    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);     
+    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);             
 
     let matchingItem;    
 
@@ -117,11 +124,23 @@ addToCartBtns.forEach((btn) => {
     let totalQuantity = 0;
     cart.forEach((item) => {
       totalQuantity += item.quantity;
-    });    
+    });  
+
     const cartQuantity = document.querySelector('.js-cart-quantity');
     cartQuantity.innerHTML = totalQuantity;
-    console.log(totalQuantity);
-    console.log(cart);
+    
+    // show added to cart message
+    const addedMessage = document.querySelector(`.js-added-to-cart-message-${productId}`);         
+    if (!addedMessage.classList.contains('opacity-100')) { // if not visible
+      addedMessage.classList.add('opacity-100'); // make it visible
+      removeOpacity = setTimeout(() => addedMessage.classList.remove('opacity-100'), 2000); // then remove after 2s.
+    } else { // if already visible (already clicked add to cart button)
+      clearInterval(removeOpacity); // reset the remove timer
+      removeOpacity = setTimeout(() => addedMessage.classList.remove('opacity-100'), 2000); // add new timer
+    }    
+   
+    // console.log(totalQuantity);
+    // console.log(cart);
   }); 
 });
 
