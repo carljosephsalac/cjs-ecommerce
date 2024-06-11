@@ -33,6 +33,7 @@ const cjsProducts = [{
   priceCents: 1899
 }];
 
+// create html with the value based on the product array data
 let productsHTML = '';
 
 products.forEach((product) => {
@@ -58,6 +59,21 @@ products.forEach((product) => {
         $${(product.priceCents / 100).toFixed(2) /*convert to decimal(fixed to 2 places)*/}
       </div>
 
+      <div class="product-quantity-container">
+        <select class="js-quantity-selector-${product.id}" data-testid="quantity-selector">
+          <option selected="" value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>          
+        </select>
+      </div>
+
       <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}" data-product-name="${product.name}">
           Add to Cart
       </button>
@@ -65,19 +81,23 @@ products.forEach((product) => {
   `;   
 });
 
+// put the generated html inside products div
 const productsGrid = document.querySelector('.js-products-grid');
 productsGrid.innerHTML = productsHTML;
 
-const addToCartBtn = document.querySelectorAll('.js-add-to-cart');
-addToCartBtn.forEach((btn) => {  
+const addToCartBtns = document.querySelectorAll('.js-add-to-cart');
+addToCartBtns.forEach((btn) => {  
   btn.addEventListener('click', () => {
-    const productId = btn.dataset.productId;
-    const productName = btn.dataset.productName;   
+    /* 
+      const productId = btn.dataset.productId; // no destructuring
+      const productName = btn.dataset.productName; // no destructuring
+    */
+    const { productId, productName } = btn.dataset; // destructuring
+    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);     
 
     let matchingItem;    
 
     // cart.forEach(item => item.productId === productId && (matchingItem = item)); // shorthand
-
     cart.forEach(item => { // longhand (verbose)
       if (item.productId === productId) {
         matchingItem = item;
@@ -85,23 +105,23 @@ addToCartBtn.forEach((btn) => {
     });
 
     if (matchingItem) {
-      matchingItem.quantity++;
+      matchingItem.quantity += Number(quantitySelector.value);
     } else {
       cart.push({
-        productId: productId,
-        productName: productName,
-        quantity: 1
+        productId, // property shorthand (same property name & var name)
+        productName, // property shorthand (same property name & var name)
+        quantity: Number(quantitySelector.value)
       });
     }    
 
     let totalQuantity = 0;
     cart.forEach((item) => {
       totalQuantity += item.quantity;
-    });
-    console.log(totalQuantity);
-    console.log(cart);
+    });    
     const cartQuantity = document.querySelector('.js-cart-quantity');
     cartQuantity.innerHTML = totalQuantity;
+    console.log(totalQuantity);
+    console.log(cart);
   }); 
 });
 
