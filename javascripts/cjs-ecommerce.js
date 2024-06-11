@@ -94,6 +94,7 @@ productsGrid.innerHTML = productsHTML;
 
 const addToCartBtns = document.querySelectorAll('.js-add-to-cart');
 addToCartBtns.forEach((btn) => {  
+  let removeOpacity; // declared outside to retains its value
   btn.addEventListener('click', () => {
     /* 
       const productId = btn.dataset.productId; // no destructuring
@@ -129,13 +130,13 @@ addToCartBtns.forEach((btn) => {
     const cartQuantity = document.querySelector('.js-cart-quantity');
     cartQuantity.innerHTML = totalQuantity;
     
-    // show added to cart message
+    // show added to cart message    
     const addedMessage = document.querySelector(`.js-added-to-cart-message-${productId}`);         
     if (!addedMessage.classList.contains('opacity-100')) { // if not visible
       addedMessage.classList.add('opacity-100'); // make it visible
       removeOpacity = setTimeout(() => addedMessage.classList.remove('opacity-100'), 2000); // then remove after 2s.
     } else { // if already visible (already clicked add to cart button)
-      clearInterval(removeOpacity); // reset the remove timer
+      clearTimeout(removeOpacity); // reset the remove timer
       removeOpacity = setTimeout(() => addedMessage.classList.remove('opacity-100'), 2000); // add new timer
     }    
    
