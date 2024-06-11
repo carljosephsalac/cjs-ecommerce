@@ -1,3 +1,5 @@
+import {cart} from '../data/cart.js';
+
 // how to create products data
 const cjsProducts = [{
   image: 'images/products/athletic-cotton-socks-6-pairs.jpg',
