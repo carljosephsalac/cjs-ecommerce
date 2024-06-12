@@ -1,5 +1,6 @@
 import {cart, addToCart} from '../data/cart.js';
 import { products } from '../data/products.js';
+import { toCents } from './utils/money.js';
 
 // how to create products data
 const cjsProducts = [{
@@ -59,7 +60,7 @@ products.forEach((product) => {
       </div>
 
       <div class="product-price">
-        $${(product.priceCents / 100).toFixed(2) /*convert to decimal(fixed to 2 places)*/}
+        $${toCents(product.priceCents)}
       </div>
 
       <div class="product-quantity-container">
