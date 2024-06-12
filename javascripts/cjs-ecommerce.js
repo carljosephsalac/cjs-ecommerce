@@ -113,7 +113,7 @@ addToCartBtns.forEach((btn) => {
 
 
 
-function updateCartQuantity () {
+function updateCartQuantity () { // update cart value in header
   let totalQuantity = 0;
   cart.forEach((item) => {
     totalQuantity += item.quantity;
@@ -122,8 +122,7 @@ function updateCartQuantity () {
   cartQuantity.innerHTML = totalQuantity;
 }
 
-// Object to store the removeOpacity timeout ID for each button
-const opacityTimers = {};
+const opacityTimers = {}; // Object to store the removeOpacity timeout ID for each button
 // function that shows added to cart message    
 function showAddedMessage (productId) {  
   const addedMessage = document.querySelector(`.js-added-to-cart-message-${productId}`);         

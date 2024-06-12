@@ -23,17 +23,17 @@ export function addToCart(productId, productName) {
   saveToStorage();
 }
 
-export function removeFromCart(productId) {
-  const newCart = [];
+export function removeFromCart(productId) { // updates the cart when item gets deleted
+  const newCart = []; // container for items that not going to delete
   cart.forEach((cartItem) => {
-    if (cartItem.productId !== productId) {
-      newCart.push(cartItem);
+    if (cartItem.productId !== productId) { // if cart item in not equal to item that not want to delete
+      newCart.push(cartItem); // put that to new cart array container
     }
   });
-  cart = newCart;
+  cart = newCart; // save the value of newCart to cart
   saveToStorage();
 }
 
-function saveToStorage() {
+function saveToStorage() { 
   localStorage.setItem('cart', JSON.stringify(cart));
 }
