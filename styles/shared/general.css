@@ -77,12 +77,12 @@ input, select, button {
 }
 
 .link-primary {
-  color: rgb(1, 124, 182);
+  color: rgb(0, 174, 255);
   cursor: pointer;
 }
 
 .link-primary:hover {
-  color: rgb(196, 80, 0);
+  color: rgb(255, 102, 0);
 }
 
 /* Styles for dropdown selectors. */
