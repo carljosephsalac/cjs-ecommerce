@@ -1,4 +1,4 @@
-import {cart} from '../data/cart.js';
+import {cart, addToCart} from '../data/cart.js';
 import { products } from '../data/products.js';
 
 // how to create products data
@@ -96,55 +96,45 @@ const productsGrid = document.querySelector('.js-products-grid');
 productsGrid.innerHTML = productsHTML;
 
 const addToCartBtns = document.querySelectorAll('.js-add-to-cart');
-addToCartBtns.forEach((btn) => {  
-  let removeOpacity; // declared outside to retains its value
+addToCartBtns.forEach((btn) => {    
   btn.addEventListener('click', () => {
     /* 
       const productId = btn.dataset.productId; // no destructuring
       const productName = btn.dataset.productName; // no destructuring
     */
     const { productId, productName } = btn.dataset; // destructuring
-    const quantitySelector = document.querySelector(`.js-quantity-selector-${productId}`);             
 
-    let matchingItem;    
-
-    // cart.forEach(item => item.productId === productId && (matchingItem = item)); // shorthand
-    cart.forEach(item => { // longhand (verbose)
-      if (item.productId === productId) {
-        matchingItem = item;
-      }
-    });
-
-    if (matchingItem) {
-      matchingItem.quantity += Number(quantitySelector.value);
-    } else {
-      cart.push({
-        productId, // property shorthand (same property name & var name)
-        productName, // property shorthand (same property name & var name)
-        quantity: Number(quantitySelector.value)
-      });
-    }    
-
-    let totalQuantity = 0;
-    cart.forEach((item) => {
-      totalQuantity += item.quantity;
-    });  
-
-    const cartQuantity = document.querySelector('.js-cart-quantity');
-    cartQuantity.innerHTML = totalQuantity;
-    
-    // show added to cart message    
-    const addedMessage = document.querySelector(`.js-added-to-cart-message-${productId}`);         
-    if (!addedMessage.classList.contains('opacity-100')) { // if not visible
-      addedMessage.classList.add('opacity-100'); // make it visible
-      removeOpacity = setTimeout(() => addedMessage.classList.remove('opacity-100'), 2000); // then remove after 2s.
-    } else { // if already visible (already clicked add to cart button)
-      clearTimeout(removeOpacity); // reset the remove timer
-      removeOpacity = setTimeout(() => addedMessage.classList.remove('opacity-100'), 2000); // add new timer
-    }    
-   
-    // console.log(totalQuantity);
-    // console.log(cart);
+    addToCart(productId, productName);
+    updateCartQuantity();
+    showAddedMessage(productId);
   }); 
 });
 
+
+
+function updateCartQuantity () {
+  let totalQuantity = 0;
+  cart.forEach((item) => {
+    totalQuantity += item.quantity;
+  });  
+  const cartQuantity = document.querySelector('.js-cart-quantity');
+  cartQuantity.innerHTML = totalQuantity;
+}
+
+// Object to store the removeOpacity timeout ID for each button
+const opacityTimers = {};
+// function that shows added to cart message    
+function showAddedMessage (productId) {  
+  const addedMessage = document.querySelector(`.js-added-to-cart-message-${productId}`);         
+  if (!addedMessage.classList.contains('opacity-100')) { // if not visible
+    addedMessage.classList.add('opacity-100'); // make it visible   
+    opacityTimers[productId] = setTimeout(() => {  // Store the timeout ID in the opacityTimers object
+      addedMessage.classList.remove('opacity-100');
+    }, 2000); // then remove after 2s.
+  } else { // if already visible (already clicked add to cart button)
+    clearTimeout(opacityTimers[productId]); // reset the remove opacity timer    
+    opacityTimers[productId] = setTimeout(() => { // Set a new timeout and update the opacityTimers object
+      addedMessage.classList.remove('opacity-100');
+    }, 2000); // add new timer
+  }        
+}
