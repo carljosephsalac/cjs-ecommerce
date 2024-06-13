@@ -1,4 +1,4 @@
-import {cart, addToCart} from '../data/cart.js';
+import {cart, addToCart, calculateCartQuantity} from '../data/cart.js';
 import { products } from '../data/products.js';
 import { toCents } from './utils/money.js';
 
@@ -96,6 +96,8 @@ products.forEach((product) => {
 const productsGrid = document.querySelector('.js-products-grid');
 productsGrid.innerHTML = productsHTML;
 
+const cartQuantity = document.querySelector('.js-cart-quantity'); // declared outside foreach
+
 const addToCartBtns = document.querySelectorAll('.js-add-to-cart');
 addToCartBtns.forEach((btn) => {    
   btn.addEventListener('click', () => {
@@ -104,23 +106,13 @@ addToCartBtns.forEach((btn) => {
       const productName = btn.dataset.productName; // no destructuring
     */
     const { productId, productName } = btn.dataset; // destructuring
-
-    addToCart(productId, productName);
-    updateCartQuantity();
+    addToCart(productId, productName);    
     showAddedMessage(productId);
+    cartQuantity.innerHTML = calculateCartQuantity(); // updates cart quantity header
   }); 
 });
 
-
-
-function updateCartQuantity () { // update cart value in header
-  let totalQuantity = 0;
-  cart.forEach((item) => {
-    totalQuantity += item.quantity;
-  });  
-  const cartQuantity = document.querySelector('.js-cart-quantity');
-  cartQuantity.innerHTML = totalQuantity;
-}
+cartQuantity.innerHTML = calculateCartQuantity(); // updates cart quantity header
 
 const opacityTimers = {}; // Object to store the removeOpacity timeout ID for each button
 // function that shows added to cart message    

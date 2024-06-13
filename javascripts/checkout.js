@@ -1,4 +1,4 @@
-import { cart, removeFromCart } from "../data/cart.js";
+import { cart, removeFromCart, calculateCartQuantity } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { toCents } from "./utils/money.js";
 
@@ -86,23 +86,17 @@ cart.forEach((item) => { // generate cart item html
 
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML; // updates the html
 
+const cartQuantity = document.querySelector('.js-return-to-home-link'); // declared outside foreach
+
 document.querySelectorAll('.js-delete-link').forEach((deleteLink) => { // get delete links DOM
   deleteLink.addEventListener('click', () => { // add event listener on each delete link
     const productId = deleteLink.dataset.productId; // get the unique id in dataset assigned to each delete link   
     removeFromCart(productId); // remove from cart
     const container = document.querySelector(`.js-cart-item-container-${productId}`); //get the container w/ unique id
     container.remove(); // remove the container 
-    updateCartQuantity();   
+    cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); // updates cart quantity header  
   });
 });
 
-updateCartQuantity();
+cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); // updates cart quantity header
 
-function updateCartQuantity() { // update cart value in header
-  let totalQuantity = 0;
-  cart.forEach((item) => {
-    totalQuantity += item.quantity;
-  });  
-  const cartQuantity = document.querySelector('.js-return-to-home-link');
-  cartQuantity.innerHTML = totalQuantity;
-}
