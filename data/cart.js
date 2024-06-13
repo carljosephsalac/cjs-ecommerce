@@ -43,6 +43,19 @@ export function calculateCartQuantity() { // update cart value in header
   return totalQuantity;
 }
 
+export function updateQuantity(productId, newQuantity) { // updates the cart
+  const newCart = []; // new container with new quantity value
+  cart.forEach((cartItem) => {
+    if (cartItem.productId !== productId) { // if cart item in not equal to item that not want to update
+      newCart.push(cartItem); // put that to new cart array container
+    } else {
+      cartItem.quantity = newQuantity;     
+      newCart.push(cartItem);
+    }
+  });
+  cart = newCart; // save the value of newCart to cart
+  saveToStorage();
+}
 
 function saveToStorage() { 
   localStorage.setItem('cart', JSON.stringify(cart));
