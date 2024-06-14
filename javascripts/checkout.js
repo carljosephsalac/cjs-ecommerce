@@ -30,9 +30,9 @@ cart.forEach((item) => { // generate cart item html
               <div class="product-quantity">
                 <span>
                   Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}" data-product-id="${matchingProduct.id}">
-                    ${item.quantity}
-                  </span>
-                </span>
+                    ${item.quantity}                    
+                  </span>                  
+                </span>                
                 <span class="js-update-quantity-link update-quantity-link link-primary" data-product-id="${matchingProduct.id}">
                   Update
                 </span>
@@ -122,21 +122,43 @@ document.querySelectorAll('.js-update-quantity-link').forEach((updateLink) => { 
 });  
 
 // SAVE (Opposite of UPDATE)
-document.querySelectorAll('.js-save-quantity-link').forEach((saveLink) => { // get save links DOM
-  saveLink.addEventListener('click', () => { // add event listener on each save link
-    const productId = saveLink.dataset.productId; // get the unique id in dataset assigned to each save link   
+document.querySelectorAll('.js-save-quantity-link').forEach((saveLink) => {
+  const handleSave = () => { // put inside the function for reusability
+    const productId = saveLink.dataset.productId; // get the unique id in dataset assigned to each save link
     const container = document.querySelector(`.js-cart-item-container-${productId}`);
-    // remove class on container to make style (display) on child elements backt to its default value 
+    // remove class on container to make style (display) on child elements back to its default value
     container.classList.remove('is-editing-quantity');
     // get the value of input
-    const quantityInputValue = document.querySelector(`.js-quantity-input-${productId}`).value; 
-    // display the value of input to quantity label
-    document.querySelector(`.js-quantity-label-${productId}`).textContent = quantityInputValue; 
+    const quantityInputValue = document.querySelector(`.js-quantity-input-${productId}`).value;
     const newQuantity = Number(quantityInputValue); // convert the value of input to number
-    updateQuantity(productId, newQuantity); // updates the cart array
-    // updates cart quantity header when the save link is clicked
-    cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); 
+
+    if (newQuantity >= 0 && newQuantity < 1000) { // validation
+      if (newQuantity === 0) {
+        removeFromCart(productId); // remove the specified id from cart
+        container.remove(); // remove the container        
+      } else {
+        // display the value of input to quantity label
+        document.querySelector(`.js-quantity-label-${productId}`).textContent = newQuantity;        
+        updateQuantity(productId, newQuantity); // updates the cart array
+        // updates cart quantity header when the save link is clicked      
+      }      
+    } else {
+      alert('Not a valid quantity');
+    }    
+    cartQuantity.innerHTML = (`${calculateCartQuantity()} items`);
+  };
+
+  // Add click event listener on each save link
+  saveLink.addEventListener('click', handleSave);
+
+  // Add keypress event listener for Enter key on each input field
+  const inputField = document.querySelector(`.js-quantity-input-${saveLink.dataset.productId}`);
+  inputField.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      handleSave();
+    }
   });
 });
+
 // updates cart quantity header on the first load of the page
 cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); 
