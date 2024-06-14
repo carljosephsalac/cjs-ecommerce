@@ -43,7 +43,7 @@ export function calculateCartQuantity() { // update cart value in header
   return totalQuantity;
 }
 
-export function updateQuantity(productId, newQuantity) { // updates the cart
+export function updateQuantity(productId, newQuantity) { // updates the cart array
   const newCart = []; // new container with new quantity value
   cart.forEach((cartItem) => {
     if (cartItem.productId !== productId) { // if cart item in not equal to item that not want to update

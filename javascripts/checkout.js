@@ -2,6 +2,7 @@ import { cart, removeFromCart, calculateCartQuantity, updateQuantity } from "../
 import { products } from "../data/products.js";
 import { toCents } from "./utils/money.js";
 
+// CREATE
 let cartSummaryHTML = '';
 
 cart.forEach((item) => { // generate cart item html
@@ -90,46 +91,52 @@ cart.forEach((item) => { // generate cart item html
   });
 });
 
+// READ
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML; // updates the html
 
 const cartQuantity = document.querySelector('.js-return-to-home-link'); // declared outside foreach
 
+// DELETE
 document.querySelectorAll('.js-delete-quantity-link').forEach((deleteLink) => { // get delete links DOM
   deleteLink.addEventListener('click', () => { // add event listener on each delete link
     const productId = deleteLink.dataset.productId; // get the unique id in dataset assigned to each delete link   
-    removeFromCart(productId); // remove from cart
+    removeFromCart(productId); // remove the specified id from cart
     const container = document.querySelector(`.js-cart-item-container-${productId}`); //get the container w/ unique id
     container.remove(); // remove the container 
     cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); // updates cart quantity header  
   });
 });
 
-document.querySelectorAll('.js-update-quantity-link').forEach((updateLink) => {
-  updateLink.addEventListener('click', () => {
-    const productId = updateLink.dataset.productId;
+// UPDATE (Opposite of SAVE)
+document.querySelectorAll('.js-update-quantity-link').forEach((updateLink) => { // get update links DOM
+  updateLink.addEventListener('click', () => { // add event listener on each update link
+    const productId = updateLink.dataset.productId; // get the unique id in dataset assigned to each update link   
     const container = document.querySelector(`.js-cart-item-container-${productId}`);
-    container.classList.add('is-editing-quantity');  
+    // add class on container to apply specific style on child elements (display: none)
+    container.classList.add('is-editing-quantity'); 
+    // get the current quantity value in label
     const quantitylabelValue = document.querySelector(`.js-quantity-label-${productId}`).textContent.trim();
+    // put the quantity value to input value
     document.querySelector(`.js-quantity-input-${productId}`).value = quantitylabelValue;
   });
-});
+});  
 
-document.querySelectorAll('.js-quantity-label').forEach((quantityLabelValue) => {
-  const productId = quantityLabelValue.dataset.productId;
-  document.querySelector(`.js-quantity-input-${productId}`).value = quantityLabelValue.textContent; 
-});      
-
-document.querySelectorAll('.js-save-quantity-link').forEach((saveLink) => {
-  saveLink.addEventListener('click', () => {
-    const productId = saveLink.dataset.productId;
+// SAVE (Opposite of UPDATE)
+document.querySelectorAll('.js-save-quantity-link').forEach((saveLink) => { // get save links DOM
+  saveLink.addEventListener('click', () => { // add event listener on each save link
+    const productId = saveLink.dataset.productId; // get the unique id in dataset assigned to each save link   
     const container = document.querySelector(`.js-cart-item-container-${productId}`);
-    container.classList.remove('is-editing-quantity');  
-
+    // remove class on container to make style (display) on child elements backt to its default value 
+    container.classList.remove('is-editing-quantity');
+    // get the value of input
     const quantityInputValue = document.querySelector(`.js-quantity-input-${productId}`).value; 
+    // display the value of input to quantity label
     document.querySelector(`.js-quantity-label-${productId}`).textContent = quantityInputValue; 
-    const newQuantity = Number(quantityInputValue);
-    updateQuantity(productId, newQuantity);
-    cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); // updates cart quantity header    
+    const newQuantity = Number(quantityInputValue); // convert the value of input to number
+    updateQuantity(productId, newQuantity); // updates the cart array
+    // updates cart quantity header when the save link is clicked
+    cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); 
   });
 });
-cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); // updates cart quantity header
+// updates cart quantity header on the first load of the page
+cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); 
