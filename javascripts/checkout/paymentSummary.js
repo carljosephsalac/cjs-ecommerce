@@ -54,9 +54,9 @@ export function renderPaymentSummary() {
   `
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHTML;
   
-  console.log(`Items: $${toCents(productPriceCents)}`);
-  console.log(`Shipping and handling: $${toCents(shippingPriceCents)}`);
-  console.log(`Total before tax: $${toCents(totalBeforeTaxCents)}`);
-  console.log(`Estimated tax (10%): $${toCents(estimatedTaxCents)}`);
-  console.log(`Order total: $${toCents(orderTotalCents)}`);
+  // console.log(`Items: $${toCents(productPriceCents)}`);
+  // console.log(`Shipping and handling: $${toCents(shippingPriceCents)}`);
+  // console.log(`Total before tax: $${toCents(totalBeforeTaxCents)}`);
+  // console.log(`Estimated tax (10%): $${toCents(estimatedTaxCents)}`);
+  // console.log(`Order total: $${toCents(orderTotalCents)}`);
 }
