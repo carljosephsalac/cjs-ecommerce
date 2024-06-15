@@ -10,6 +10,7 @@ import toCents from "../utils/money.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
 import { renderPaymentSummary } from "./paymentSummary.js";
+import { renderCheckoutHeader } from "./checkoutHeader.js";
 
 export function renderOrderSummary() { // put all codes to this function in order to easily re-run the code
   // CREATE
@@ -104,7 +105,6 @@ export function renderOrderSummary() { // put all codes to this function in orde
 
 
   /* CONTROLLER */
-  const cartQuantity = document.querySelector('.js-return-to-home-link'); // declared outside foreach
   // DELETE
   document.querySelectorAll('.js-delete-quantity-link').forEach((deleteLink) => { // get delete links DOM
     deleteLink.addEventListener('click', () => { // add event listener on each delete link
@@ -113,7 +113,8 @@ export function renderOrderSummary() { // put all codes to this function in orde
        //get the container w/ unique id
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.remove(); // remove the container 
-      cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); // updates cart quantity header  
+      renderCheckoutHeader(); // re-run renderCheckoutHeader function to update the html
+      renderPaymentSummary(); // re-run renderPaymentSummary function to update the html
     });
   });
 
@@ -154,8 +155,8 @@ export function renderOrderSummary() { // put all codes to this function in orde
         }      
       } else {
         alert('Not a valid quantity');
-      }    
-      cartQuantity.innerHTML = (`${calculateCartQuantity()} items`);
+      }          
+      renderCheckoutHeader(); // re-run renderCheckoutHeader function to update the html
       renderPaymentSummary(); // re-run renderPaymentSummary function to update the html
     };
 
@@ -170,9 +171,6 @@ export function renderOrderSummary() { // put all codes to this function in orde
       }
     });
   });
-
-  // updates cart quantity header on the first load of the page
-  cartQuantity.innerHTML = (`${calculateCartQuantity()} items`);
 
   document.querySelectorAll('.js-delivery-option').forEach((element) => {
     element.addEventListener('click', () => {
