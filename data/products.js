@@ -1,3 +1,14 @@
+/* If the id from products array is equal to productId from cart.js, return that products object */
+export function getProduct(productId) { // productId is from cart object
+  let matchingProduct; // container for matching product.id and productId (cart.productId)
+  products.forEach((product) => { // iterate through products array
+    if (product.id === productId) { // if product.id is equal to productId (cart.productId)
+      matchingProduct = product; // save that product to matchingProduct container     
+    }
+  });
+  return matchingProduct; // return to get the matchingProduct when this function is called
+}
+
 export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",

@@ -5,33 +5,26 @@ import { cart,
         updateDeliveryOption 
       } from "../../data/cart.js";
 
-import { products } from "../../data/products.js";
+import { products, getProduct } from "../../data/products.js";
 import toCents from "../utils/money.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { deliveryOptions } from "../../data/deliveryOptions.js";
+import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
 export function renderOrderSummary() { // put all codes to this function in order to easily re-run the code
   // CREATE
   let cartSummaryHTML = '';
 
   cart.forEach((cartItem) => { // generate cart cartItem html
-    let matchingProduct;
-    products.forEach((product) => {
-      if (product.id === cartItem.productId) {
-        matchingProduct = product;     
-      }
-    });
+    /* MODEL */
+    const matchingProduct = getProduct(cartItem.productId);
+    const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
 
-    let deliveryOption;
-    deliveryOptions.forEach((option) => {
-      if (option.id === cartItem.deliveryOptionId) {
-        deliveryOption = option;     
-      }
-    });
     const today = dayjs(); // date today
     const deliveryDate = today.add(deliveryOption.deliveryDays, 'days'); // add days base on delivery option
     const dateString = deliveryDate.format('dddd, MMMM, D'); // format the date
 
+    /* VIEW */
     cartSummaryHTML += `
       <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
         <div class="delivery-date">
@@ -109,14 +102,16 @@ export function renderOrderSummary() { // put all codes to this function in orde
   // READ
   document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML; // updates the html
 
-  const cartQuantity = document.querySelector('.js-return-to-home-link'); // declared outside foreach
 
+  /* CONTROLLER */
+  const cartQuantity = document.querySelector('.js-return-to-home-link'); // declared outside foreach
   // DELETE
   document.querySelectorAll('.js-delete-quantity-link').forEach((deleteLink) => { // get delete links DOM
     deleteLink.addEventListener('click', () => { // add event listener on each delete link
       const productId = deleteLink.dataset.productId; // get the unique id in dataset assigned to each delete link   
       removeFromCart(productId); // remove the specified id from cart
-      const container = document.querySelector(`.js-cart-item-container-${productId}`); //get the container w/ unique id
+       //get the container w/ unique id
+      const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.remove(); // remove the container 
       cartQuantity.innerHTML = (`${calculateCartQuantity()} items`); // updates cart quantity header  
     });
@@ -161,6 +156,7 @@ export function renderOrderSummary() { // put all codes to this function in orde
         alert('Not a valid quantity');
       }    
       cartQuantity.innerHTML = (`${calculateCartQuantity()} items`);
+      renderPaymentSummary(); // re-run renderPaymentSummary function to update the html
     };
 
     // Add click event listener on each save link
@@ -183,6 +179,7 @@ export function renderOrderSummary() { // put all codes to this function in orde
       const {productId, deliveryOptionId} = element.dataset // get the data set
       updateDeliveryOption(productId, deliveryOptionId);
       renderOrderSummary(); // re-run all the code when clicked another delivery option
+      renderPaymentSummary(); // re-run renderPaymentSummary function to update the html
     });
   });
 }
