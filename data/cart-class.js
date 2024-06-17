@@ -1,14 +1,15 @@
 class Cart {
   cartItems;
-  localStorageKey;
+  #localStorageKey; // private property
 
   constructor(localStorageKey) {
-    this.localStorageKey = localStorageKey;
-    this.loadFromStorage();
+    this.#localStorageKey = localStorageKey;
+    this.#loadFromStorage();
   }
 
-  loadFromStorage() { // put inside a function so that it can use in test
-    this.cartItems = JSON.parse(localStorage.getItem(this.localStorageKey)) || 
+  // private method
+  #loadFromStorage() { // put inside a function so that it can use in test
+    this.cartItems = JSON.parse(localStorage.getItem(this.#localStorageKey)) || 
     [{
       productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
       productName: 'Black and Gray Athletic Cotton Socks - 6 Pairs',
@@ -28,7 +29,7 @@ class Cart {
   }
 
   saveToStorage() { 
-    localStorage.setItem(this.localStorageKey, JSON.stringify(this.cartItems));
+    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cartItems));
   }
 
   // CREATE
