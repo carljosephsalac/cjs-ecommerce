@@ -11,8 +11,6 @@ export function loadProducts(fun = () => {}) { // add default value `() => {}` t
   xhr.send();
 }
 
-loadProducts();
-
 /* If the id from products array is equal to productId from cart.js, return that products object */
 export function getProduct(productId) { // productId is from cart object
   let matchingProduct; // container for matching product.id and productId (cart.productId)
