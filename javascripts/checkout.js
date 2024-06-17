@@ -54,17 +54,43 @@ import { loadCart } from "../data/cart.js";
 // });
 
 /* FETCH */
-Promise.all([
-  loadProductsFetch(),
+// Promise.all([
+//   loadProductsFetch(),
+//   new Promise((resolve) => {
+//     loadCart(() => {
+//      resolve('cart loaded successfully');
+//     });
+//   })
+// ]).then((value1, value2) => {
+//   renderOrderSummary();
+//   renderPaymentSummary();
+//   renderCheckoutHeader();
+//   // console.log(value1);
+//   // console.log(value2);
+// });
+
+/* Asynch Await */
+/* Async/Await */
+
+// Define an asynchronous function named loadPage
+async function loadPage() { // This makes the function return a promise
+  
+  // Await the resolution of loadProductsFetch()
+  // This pauses the execution of loadPage until loadProductsFetch() completes
+  await loadProductsFetch();
+  
   new Promise((resolve) => {
     loadCart(() => {
-     resolve('cart loaded successfully');
+    resolve('cart loaded successfully');
     });
   })
-]).then((value1, value2) => {
+
   renderOrderSummary();
   renderPaymentSummary();
   renderCheckoutHeader();
-  // console.log(value1);
-  // console.log(value2);
-});
+
+  // Return 'value2' after loadProductsFetch() completes
+  // This is similar to resolve('value2') in a promise
+  return 'value2'; 
+}
+loadPage();
