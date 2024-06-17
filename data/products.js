@@ -11,6 +11,23 @@ export function loadProducts(fun = () => {}) { // add default value `() => {}` t
   xhr.send();
 }
 
+// Export a function called loadProductsFetch which returns a promise
+export function loadProductsFetch() {
+  const promise = fetch('https://supersimplebackend.dev/products') 
+    .then(response => response.json()) // When the fetch promise resolves, convert the response to JSON
+    .then(productsData => { // When the JSON conversion promise resolves, use the resulting data
+      products = productsData; // Assign the received data to the products array
+      console.log('Products loaded with fetch:', products); // Log the loaded products to the console for debugging
+    })
+    .catch(error => { // Catch and log any errors that occur during the fetch or JSON conversion
+      console.error('Error loading products with fetch:', error);
+    });
+  return promise; // Return a promise created by the fetch API
+}
+// loadProductsFetch().then(() => {
+//   console.log('next step');
+// });
+
 /* If the id from products array is equal to productId from cart.js, return that products object */
 export function getProduct(productId) { // productId is from cart object
   let matchingProduct; // container for matching product.id and productId (cart.productId)
