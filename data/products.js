@@ -1,3 +1,18 @@
+export let products = [];
+
+export function loadProducts(fun = () => {}) { // add default value `() => {}` to prevent TypeError
+  const xhr = new XMLHttpRequest();
+  xhr.addEventListener('load', () => {
+    products = JSON.parse(xhr.response); // put the response inside products array
+    console.log('load products');
+    fun(); // calback
+  });
+  xhr.open('GET', 'https://supersimplebackend.dev/products');
+  xhr.send();
+}
+
+loadProducts();
+
 /* If the id from products array is equal to productId from cart.js, return that products object */
 export function getProduct(productId) { // productId is from cart object
   let matchingProduct; // container for matching product.id and productId (cart.productId)
@@ -9,7 +24,11 @@ export function getProduct(productId) { // productId is from cart object
   return matchingProduct; // return to get the matchingProduct when this function is called
 }
 
-export const products = [
+// export function getProduct(productId) { // shorthand
+//   return products.find(product => product.id === productId); // Use find method for simplicity
+// }
+
+/* export const products = [
   {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "images/products/athletic-cotton-socks-6-pairs.jpg",
@@ -668,4 +687,4 @@ export const products = [
       "mens"
     ]
   }
-];
+]; */

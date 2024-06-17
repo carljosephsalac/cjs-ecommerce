@@ -176,4 +176,5 @@ export function renderOrderSummary() { // put all codes to this function in orde
   });
 }
 
-renderOrderSummary(); // run the all the code on the first load of the page
+/* remove because it is being called immediately before the products api is loaded */
+// renderOrderSummary(); // run the all the code on the first load of the page

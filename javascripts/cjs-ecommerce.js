@@ -1,6 +1,9 @@
 import {cart, addToCart, calculateCartQuantity} from '../data/cart.js';
-import { products } from '../data/products.js';
+import { products, loadProducts } from '../data/products.js';
 import { toCents } from './utils/money.js';
+
+// ensures the product api response is executed first before calling the renderProductsGrid function
+loadProducts(renderProductsGrid); 
 
 // how to create products data
 const cjsProducts = [{
@@ -37,96 +40,99 @@ const cjsProducts = [{
   priceCents: 1899
 }];
 
-// create html with the value based on the product array data
-let productsHTML = '';
+// put the codes inside a function to be use as a callback to loadProducts function
+function renderProductsGrid() {
+  // create html with the value based on the product array data
+  let productsHTML = '';
 
-products.forEach((product) => {
-  productsHTML += `
-    <div class="product-container">
-      <div class="product-image-container">
-        <img src="${product.image}" class="product-image">
-      </div>
-
-      <div class="product-name">
-        ${product.name}
-      </div>
-
-      <div class="product-rating-container">
-        <img class="product-rating-stars"
-          src="images/ratings/rating-${product.rating.stars * 10 /*convert to whole number*/}.png">
-        <div class="product-rating-count link-primary">
-          ${product.rating.count}
+  products.forEach((product) => {
+    productsHTML += `
+      <div class="product-container">
+        <div class="product-image-container">
+          <img src="${product.image}" class="product-image">
         </div>
+
+        <div class="product-name">
+          ${product.name}
+        </div>
+
+        <div class="product-rating-container">
+          <img class="product-rating-stars"
+            src="images/ratings/rating-${product.rating.stars * 10 /*convert to whole number*/}.png">
+          <div class="product-rating-count link-primary">
+            ${product.rating.count}
+          </div>
+        </div>
+
+        <div class="product-price">
+          $${toCents(product.priceCents)}
+        </div>
+
+        <div class="product-quantity-container">
+          <select class="js-quantity-selector-${product.id}" data-testid="quantity-selector">
+            <option selected="" value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>          
+          </select>
+        </div>
+
+        <div class="product-spacer"></div>
+
+        <div class="js-added-to-cart-message-${product.id} added-to-cart" data-testid="added-to-cart-message">
+          <img src="images/icons/checkmark.png">
+          Added
+        </div>
+
+        <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}" data-product-name="${product.name}">
+            Add to Cart
+        </button>
       </div>
+    `;   
+  });
 
-      <div class="product-price">
-        $${toCents(product.priceCents)}
-      </div>
+  // put the generated html inside products div
+  const productsGrid = document.querySelector('.js-products-grid');
+  productsGrid.innerHTML = productsHTML;
 
-      <div class="product-quantity-container">
-        <select class="js-quantity-selector-${product.id}" data-testid="quantity-selector">
-          <option selected="" value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>          
-        </select>
-      </div>
+  const cartQuantity = document.querySelector('.js-cart-quantity'); // declared outside foreach
 
-      <div class="product-spacer"></div>
+  const addToCartBtns = document.querySelectorAll('.js-add-to-cart');
+  addToCartBtns.forEach((btn) => {    
+    btn.addEventListener('click', () => {
+      /* 
+        const productId = btn.dataset.productId; // no destructuring
+        const productName = btn.dataset.productName; // no destructuring
+      */
+      const { productId, productName } = btn.dataset; // destructuring
+      addToCart(productId, productName);    
+      showAddedMessage(productId);
+      cartQuantity.innerHTML = calculateCartQuantity(); // updates cart quantity header
+    }); 
+  });
 
-      <div class="js-added-to-cart-message-${product.id} added-to-cart" data-testid="added-to-cart-message">
-        <img src="images/icons/checkmark.png">
-        Added
-      </div>
+  cartQuantity.innerHTML = calculateCartQuantity(); // updates cart quantity header
 
-      <button class="add-to-cart-button button-primary js-add-to-cart" data-product-id="${product.id}" data-product-name="${product.name}">
-          Add to Cart
-      </button>
-    </div>
-  `;   
-});
-
-// put the generated html inside products div
-const productsGrid = document.querySelector('.js-products-grid');
-productsGrid.innerHTML = productsHTML;
-
-const cartQuantity = document.querySelector('.js-cart-quantity'); // declared outside foreach
-
-const addToCartBtns = document.querySelectorAll('.js-add-to-cart');
-addToCartBtns.forEach((btn) => {    
-  btn.addEventListener('click', () => {
-    /* 
-      const productId = btn.dataset.productId; // no destructuring
-      const productName = btn.dataset.productName; // no destructuring
-    */
-    const { productId, productName } = btn.dataset; // destructuring
-    addToCart(productId, productName);    
-    showAddedMessage(productId);
-    cartQuantity.innerHTML = calculateCartQuantity(); // updates cart quantity header
-  }); 
-});
-
-cartQuantity.innerHTML = calculateCartQuantity(); // updates cart quantity header
-
-const opacityTimers = {}; // Object to store the removeOpacity timeout ID for each button
-// function that shows added to cart message    
-function showAddedMessage (productId) {  
-  const addedMessage = document.querySelector(`.js-added-to-cart-message-${productId}`);         
-  if (!addedMessage.classList.contains('opacity-100')) { // if not visible
-    addedMessage.classList.add('opacity-100'); // make it visible   
-    opacityTimers[productId] = setTimeout(() => {  // Store the timeout ID in the opacityTimers object
-      addedMessage.classList.remove('opacity-100');
-    }, 2000); // then remove after 2s.
-  } else { // if already visible (already clicked add to cart button)
-    clearTimeout(opacityTimers[productId]); // reset the remove opacity timer    
-    opacityTimers[productId] = setTimeout(() => { // Set a new timeout and update the opacityTimers object
-      addedMessage.classList.remove('opacity-100');
-    }, 2000); // add new timer
-  }        
+  const opacityTimers = {}; // Object to store the removeOpacity timeout ID for each button
+  // function that shows added to cart message    
+  function showAddedMessage (productId) {  
+    const addedMessage = document.querySelector(`.js-added-to-cart-message-${productId}`);         
+    if (!addedMessage.classList.contains('opacity-100')) { // if not visible
+      addedMessage.classList.add('opacity-100'); // make it visible   
+      opacityTimers[productId] = setTimeout(() => {  // Store the timeout ID in the opacityTimers object
+        addedMessage.classList.remove('opacity-100');
+      }, 2000); // then remove after 2s.
+    } else { // if already visible (already clicked add to cart button)
+      clearTimeout(opacityTimers[productId]); // reset the remove opacity timer    
+      opacityTimers[productId] = setTimeout(() => { // Set a new timeout and update the opacityTimers object
+        addedMessage.classList.remove('opacity-100');
+      }, 2000); // add new timer
+    }        
+  }
 }
