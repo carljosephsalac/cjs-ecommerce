@@ -74,17 +74,19 @@ import { loadCart } from "../data/cart.js";
 
 // Define an asynchronous function named loadPage
 async function loadPage() { // This makes the function return a promise
-  
-  // Await the resolution of loadProductsFetch()
-  // This pauses the execution of loadPage until loadProductsFetch() completes
-  await loadProductsFetch();
-  
-  new Promise((resolve) => {
-    loadCart(() => {
-    resolve('cart loaded successfully');
+  try {
+    // Await the resolution of loadProductsFetch()
+    // This pauses the execution of loadPage until loadProductsFetch() completes
+    await loadProductsFetch();
+    
+    new Promise((resolve) => {
+      loadCart(() => {
+      resolve('cart loaded successfully');
+      });
     });
-  })
-
+  } catch (error) {
+    console.error('Error loading products with fetch:', error);
+  }
   renderOrderSummary();
   renderPaymentSummary();
   renderCheckoutHeader();

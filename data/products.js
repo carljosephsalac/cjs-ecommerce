@@ -1,5 +1,6 @@
 export let products = [];
 
+/* XHR */
 export function loadProducts(fun = () => {}) { // add default value `() => {}` to prevent TypeError
   const xhr = new XMLHttpRequest();
   xhr.addEventListener('load', () => {
@@ -7,12 +8,15 @@ export function loadProducts(fun = () => {}) { // add default value `() => {}` t
     console.log('load products');
     fun(); // calback
   });
+  xhr.addEventListener('error', (error) => {
+    console.log('Unexpected error, please try again', error);
+  });
   xhr.open('GET', 'https://supersimplebackend.dev/products');
   xhr.send();
 }
 
-// Export a function called loadProductsFetch which returns a promise
-export function loadProductsFetch() {
+/* FETCH */
+export function loadProductsFetch() { // Export a function called loadProductsFetch which returns a promise
   const promise = fetch('https://supersimplebackend.dev/products') 
     .then(response => response.json()) // When the fetch promise resolves, convert the response to JSON
     .then(productsData => { // When the JSON conversion promise resolves, use the resulting data
