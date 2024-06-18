@@ -49,8 +49,9 @@ export function renderPaymentSummary() {
       <div class="payment-summary-money">$${toCents(orderTotalCents)}</div>
     </div>
 
-    <button class="js-place-order place-order-button button-primary">
-      Place your order
+    <button class="js-place-order place-order-button ${cart.length === 0 ? 'button-secondary' : 'button-primary'}" 
+      ${cart.length === 0 ? 'disabled' : ''}>
+      ${cart.length === 0 ? 'Your cart is empty' : 'Place your order'}
     </button>
   `
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHTML;
