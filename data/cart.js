@@ -101,7 +101,7 @@ export function loadCart(fun = () => {}) { // add default value `() => {}` to pr
   const xhr = new XMLHttpRequest();
 
   xhr.addEventListener('load', () => {
-    console.log(xhr.response);
+    // console.log(xhr.response);
     fun(); // callback
   });
 

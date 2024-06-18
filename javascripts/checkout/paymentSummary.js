@@ -55,25 +55,25 @@ export function renderPaymentSummary() {
   `
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHTML;
 
-  document.querySelector('.js-place-order').addEventListener('click', async () => {
+  document.querySelector('.js-place-order').addEventListener('click', async () => { // used async in to use await   
     try {
-      const response = await fetch('https://supersimplebackend.dev/orders', {
+      const response = await fetch('https://supersimplebackend.dev/orders', { // await the fetch (promise)
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
+        body: JSON.stringify({ // we cant send object directly
           cart: cart
         })
       })
-      const order = await response.json();
+      const order = await response.json(); // wait the response from the backend    
       addOrder(order);
 
     } catch (error) {
       console.log(error);
     }
     
-    window.location.href = 'orders.html';
+    window.location.href = 'orders.html'; // change the url
   });
   
   // console.log(`Items: $${toCents(productPriceCents)}`);

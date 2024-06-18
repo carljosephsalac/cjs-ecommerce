@@ -21,13 +21,14 @@ export function loadProductsFetch() { // Export a function called loadProductsFe
     .then(response => response.json()) // When the fetch promise resolves, convert the response to JSON
     .then(productsData => { // When the JSON conversion promise resolves, use the resulting data
       products = productsData; // Assign the received data to the products array
-      console.log('Products loaded with fetch:', products); // Log the loaded products to the console for debugging
+      // console.log('Products loaded with fetch:', products); // Log the loaded products to the console for debugging
     })
     .catch(error => { // Catch and log any errors that occur during the fetch or JSON conversion
       console.error('Error loading products with fetch:', error);
     });
   return promise; // Return a promise created by the fetch API
 }
+
 // loadProductsFetch().then(() => {
 //   console.log('next step');
 // });
@@ -43,7 +44,7 @@ export function getProduct(productId) { // productId is from cart object
   return matchingProduct; // return to get the matchingProduct when this function is called
 }
 
-// export function getProduct(productId) { // shorthand
+// export function getProduct(productId) { //shorthand
 //   return products.find(product => product.id === productId); // Use find method for simplicity
 // }
 
