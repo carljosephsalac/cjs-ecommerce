@@ -76,10 +76,11 @@ export function renderOrderSummary() { // put all codes to this function in orde
       // calculate the price
       const priceString = deliveryOption.priceCents === 0 ? 'FREE' : `$${toCents(deliveryOption.priceCents)} -`;
       const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
+      
       html += 
         `
           <div class="delivery-option js-delivery-option" data-product-id="${matchingProduct.id}" data-delivery-option-id="${deliveryOption.id}">
-            <input type="radio" ${isChecked ? 'checked' : ''} class="delivery-option-input" name="delivery-option-$${matchingProduct.id}">
+            <input type="radio" ${isChecked ? 'checked' : ''} class="delivery-option-input" name="delivery-option-${matchingProduct.id}">
             <div>
               <div class="delivery-option-date">
                 ${dateString}

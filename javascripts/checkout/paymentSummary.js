@@ -55,30 +55,44 @@ export function renderPaymentSummary() {
   `
   document.querySelector('.js-payment-summary').innerHTML = paymentSummaryHTML;
 
-  document.querySelector('.js-place-order').addEventListener('click', async () => { // used async in to use await   
-    try {
-      const response = await fetch('https://supersimplebackend.dev/orders', { // await the fetch (promise)
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ // we cant send object directly
-          cart: cart
-        })
-      })
-      const order = await response.json(); // wait the response from the backend    
-      addOrder(order);
+  /* CONTROLLER */
+  document.querySelector('.js-place-order').addEventListener('click', async () => {
+    let isValidCart = true; // Flag to check if cart is valid
+    let showAlert = true; // Flag to control the alert display
 
-    } catch (error) {
-      console.log(error);
+    cart.forEach(cartItem => {
+      if (cartItem.deliveryOptionId === null && showAlert) {
+        alert('Select shipping option');
+        isValidCart = false; // Set flag to false if deliveryOptionId is null
+        showAlert = false; // Prevent further alerts
+      }
+    })
+
+    if (isValidCart) { // Only run the code if all cart items are valid
+      try {
+        const response = await fetch('https://supersimplebackend.dev/orders', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            cart: cart
+          })
+        });
+        const order = await response.json();
+        addOrder(order);
+        window.location.href = 'orders.html'; // Redirect only if order is successful
+      } catch (error) {
+        console.log(error);
+      }
     }
-    
-    window.location.href = 'orders.html'; // change the url
   });
+
   
   // console.log(`Items: $${toCents(productPriceCents)}`);
   // console.log(`Shipping and handling: $${toCents(shippingPriceCents)}`);
   // console.log(`Total before tax: $${toCents(totalBeforeTaxCents)}`);
   // console.log(`Estimated tax (10%): $${toCents(estimatedTaxCents)}`);
   // console.log(`Order total: $${toCents(orderTotalCents)}`);
+  console.log(cart);
 }

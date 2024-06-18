@@ -39,7 +39,7 @@ export function addToCart(productId, productName) {
       productId, // property shorthand (same property name & var name)
       productName, // property shorthand (same property name & var name)
       quantity: Number(quantitySelector.value),
-      deliveryOptionId: 1
+      deliveryOptionId: null
     });
   }    
   saveToStorage();
