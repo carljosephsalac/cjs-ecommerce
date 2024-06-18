@@ -110,6 +110,7 @@ export function renderOrderSummary() { // put all codes to this function in orde
       container.remove(); // remove the container 
       renderCheckoutHeader(); // re-run renderCheckoutHeader function to update the html
       renderPaymentSummary(); // re-run renderPaymentSummary function to update the html
+      showPageTitle();
     });
   });
 
@@ -153,6 +154,7 @@ export function renderOrderSummary() { // put all codes to this function in orde
       }          
       renderCheckoutHeader(); // re-run renderCheckoutHeader function to update the html
       renderPaymentSummary(); // re-run renderPaymentSummary function to update the html
+      showPageTitle();
     };
 
     // Add click event listener on each save link
@@ -175,6 +177,18 @@ export function renderOrderSummary() { // put all codes to this function in orde
       renderPaymentSummary(); // re-run renderPaymentSummary function to update the html
     });
   });
+  
+  showPageTitle();
+}
+
+
+function showPageTitle() {
+  const pageTitle = document.querySelector('.page-title');
+  if (cart.length === 0) {
+    pageTitle.textContent = 'Your cart is currently empty';
+  } else {
+    pageTitle.textContent = 'Review your order';
+  }
 }
 
 /* remove because it is being called immediately before the products api is loaded */

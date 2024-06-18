@@ -2,6 +2,7 @@ import { orders } from "../data/orders.js";
 import { getProduct, loadProductsFetch } from "../data/products.js";
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import toCents from "./utils/money.js";
+import { calculateCartQuantity } from "../data/cart.js";
 
 export function renderPlacedOrders() {
   let placedOrdersHTML = '';
@@ -81,8 +82,16 @@ export function renderPlacedOrders() {
     return html;
   }
 
-  document.querySelector('.js-orders-grid').innerHTML = placedOrdersHTML;
-  localStorage.removeItem('cart');
+  document.querySelector('.js-cart-quantity').textContent = calculateCartQuantity();
+
+  const pageTitle = document.querySelector('.js-page-title');
+  if (orders.length === 0) {
+    pageTitle.textContent = 'You have no orders yet';
+  } else {
+    pageTitle.textContent = 'Your Orders';
+  }
+
+  document.querySelector('.js-orders-grid').innerHTML = placedOrdersHTML; 
 }
 
 // Define an async function to load products and render orders

@@ -82,6 +82,7 @@ export function renderPaymentSummary() {
         });
         const order = await response.json();
         addOrder(order);
+        localStorage.removeItem('cart');
         window.location.href = 'orders.html'; // Redirect only if order is successful
       } catch (error) {
         console.log(error);
